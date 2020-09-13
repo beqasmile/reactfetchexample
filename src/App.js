@@ -62,8 +62,71 @@ const Public = () => (
 
 const Private = () => (
   <div> This is a private page </div>
+ 
+
 );
 
+
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      items: []
+    };
+  }
+
+  componentDidMount() {
+
+    fetch('https://jsonplaceholder.typicode.com/todos' )
+    
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            items: result 
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
+
+  render() {
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      return <div>MyError: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        // <ul>
+        //   {items.map(item => (
+        //     <li key={item.ID}>
+        //       {item.CarCompany} {item.CarSize}
+        //     </li>
+        //   ))}
+        // </ul>
+         <ul>
+         {items.map(item => (
+           <li key={item.id}>
+             {item.title} {item.completed}
+           </li>
+         ))}
+       </ul>
+      );
+    }
+  }
+}
 
 
 
@@ -108,6 +171,7 @@ class App extends Component {
           <ul>
             <li><Link to='/public'> Public </Link></li>
             <li><Link to='/private'> Private </Link></li>
+            <li><Link to='/mycomponent'> MyComponent </Link></li>
           </ul>
 
           <hr/>
@@ -115,7 +179,7 @@ class App extends Component {
           <Route path='/login' component={Login} />
           <Route path='/public' component={Public} />
           <SecretRoute path='/private' component={Private} />
-          <SecretRoute path='/bank' component={Private} />
+          <SecretRoute path='/mycomponent' component={MyComponent} />
 
         </div>
       </Router>
