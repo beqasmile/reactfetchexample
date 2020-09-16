@@ -79,19 +79,17 @@ class MyComponent extends React.Component {
 
   componentDidMount() {
 
-    fetch('https://jsonplaceholder.typicode.com/todos' )
-    
-      .then(res => res.json())
+    fetch('https://localhost:44303/api/Drivers/GetAllDrivers' )
+
+
+    .then(res => res.json())
       .then(
         (result) => {
           this.setState({
             isLoaded: true,
-            items: result 
+            items: result
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             isLoaded: true,
@@ -99,65 +97,125 @@ class MyComponent extends React.Component {
           });
         }
       )
+    
+    // .then(function(response) {
+    //   // The response is a Response instance.
+    //   // You parse the data into a useable format using `.json()`
+    //   return response.json();
+    // }).then(function(data) {
+    //   this.setState({
+    //            isLoaded: true,
+    //           items: data 
+    //          });
+    // }); 
+
+
+      // .then(
+      //   (result) => {
+      //     this.setState({
+      //       isLoaded: true,
+      //       items: result.data 
+      //     });
+      //   },
+      //   // Note: it's important to handle errors here
+      //   // instead of a catch() block so that we don't swallow
+      //   // exceptions from actual bugs in components.
+      //   (error) => {
+      //     this.setState({
+      //       isLoaded: true,
+      //       error
+      //     });
+      //   }
+      // )
   }
+
 
   render() {
     const { error, isLoaded, items } = this.state;
     if (error) {
-      return <div>MyError: {error.message}</div>;
+      return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
       return <div>Loading...</div>;
-    } else {
+    } else if (items)
+    {
       return (
-        // <ul>
-        //   {items.map(item => (
-        //     <li key={item.ID}>
-        //       {item.CarCompany} {item.CarSize}
-        //     </li>
-        //   ))}
-        // </ul>
-         <ul>
-         {items.map(item => (
-           <li key={item.id}>
-             {item.title} {item.completed}
-           </li>
-         ))}
-       </ul>
+        <ul>
+          {items.map(item => (
+             <li key={item.ID}>
+                           {item.DriverName} {item.Age}
+                      </li>
+          ))}
+        </ul>
       );
     }
+
   }
 }
 
 
 
 
-// class Login extends React.Component {
-//   state = {
-//     redirectToPreviousRoute: false
-//   };
 
-//   login = () => {
-//     AuthService.authenticate(() => {
-//       this.setState({ redirectToPreviousRoute: true });
-//     });
-//   };
 
-//   render() {
-//     const { from } = this.props.location.state || { from: { pathname: "/" } };
-//     const { redirectToPreviousRoute } = this.state;
+class MyComponentRates extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      items: []
+    };
+  }
 
-//     if (redirectToPreviousRoute) {
-//       return <Redirect to={from} />;
-//     }
+  componentDidMount() {
 
-//     return (
-//       <div>
-//         <p>You must log in to view the page at {from.pathname}</p>
-//         <button onClick={this.login}>Log in</button>
-//       </div>
-//     );
-//   }
-// }
+    fetch('https://api.ratesapi.io/api/latest' )
+
+
+    .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            items: result.rates
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+    
+    
+  }
+
+
+  render() {
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else if (items)
+    {
+      var tifOptionsForEach = []
+		Object.keys(items).forEach(function(key) {
+    	tifOptionsForEach.push(<li>{key} {items[key]} {items[key]}</li>);
+		});
+      return (
+        <div>
+	  		
+				<ul>{tifOptionsForEach}</ul>
+      
+    	</div>
+      );
+    }
+
+  }
+}
+
 
 
 
@@ -172,6 +230,7 @@ class App extends Component {
             <li><Link to='/public'> Public </Link></li>
             <li><Link to='/private'> Private </Link></li>
             <li><Link to='/mycomponent'> MyComponent </Link></li>
+            <li><Link to='/rates'> Rates </Link></li>
           </ul>
 
           <hr/>
@@ -180,6 +239,7 @@ class App extends Component {
           <Route path='/public' component={Public} />
           <SecretRoute path='/private' component={Private} />
           <SecretRoute path='/mycomponent' component={MyComponent} />
+          <SecretRoute path='/rates' component={MyComponentRates} />
 
         </div>
       </Router>
