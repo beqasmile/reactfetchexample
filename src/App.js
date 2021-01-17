@@ -98,35 +98,7 @@ class MyComponent extends React.Component {
         }
       )
     
-    // .then(function(response) {
-    //   // The response is a Response instance.
-    //   // You parse the data into a useable format using `.json()`
-    //   return response.json();
-    // }).then(function(data) {
-    //   this.setState({
-    //            isLoaded: true,
-    //           items: data 
-    //          });
-    // }); 
-
-
-      // .then(
-      //   (result) => {
-      //     this.setState({
-      //       isLoaded: true,
-      //       items: result.data 
-      //     });
-      //   },
-      //   // Note: it's important to handle errors here
-      //   // instead of a catch() block so that we don't swallow
-      //   // exceptions from actual bugs in components.
-      //   (error) => {
-      //     this.setState({
-      //       isLoaded: true,
-      //       error
-      //     });
-      //   }
-      // )
+    
   }
 
 
